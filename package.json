@@ -1,0 +1,69 @@
+{
+  "name": "vra-intelligent-image-optimizer",
+  "productName": "VRA Intelligent Image Optimizer",
+  "version": "1.0.0",
+  "description": "Converts and optimizes images to WebP for fast-loading websites.",
+  "author": "Vidyasagar Robotics Academy",
+  "license": "GPL-3.0-only",
+  "homepage": "https://vsa.edu.in/",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "dependencies": {
+    "heic-convert": "^2.1.0",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "in.edu.vsa.imageoptimizer",
+    "productName": "VRA Intelligent Image Optimizer",
+    "copyright": "Copyright (c) 2026 Vidyasagar Robotics Academy",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "node_modules/sharp/**/*",
+      "node_modules/@img/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "VRA Intelligent Image Optimizer",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    }
+  },
+  "keywords": [
+    "webp",
+    "image-optimizer",
+    "image-converter",
+    "electron",
+    "windows",
+    "offline"
+  ]
+}

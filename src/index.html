@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+<title>VRA Intelligent Image Optimizer</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="toolbar">
+  <div class="brand">
+    <img id="brandLogo" alt="VRA" width="34" height="34">
+    <div class="brand-text">
+      <div class="brand-title">VRA Intelligent Image Optimizer</div>
+      <div class="brand-sub">Trusted name in education</div>
+    </div>
+  </div>
+  <nav class="tools">
+    <button class="tool" id="btnAdd" title="Add image files">
+      <svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5" stroke-dasharray="3 2.5"/><path d="M12 8v8M8 12h8"/></svg>
+      <span>Add Images</span>
+    </button>
+    <button class="tool" id="btnFolder" title="Add a whole folder">
+      <svg viewBox="0 0 24 24"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4.2l2 2.2h8.8A1.5 1.5 0 0 1 21 9.7v8.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/><path d="M12 11.5v5M9.5 14h5"/></svg>
+      <span>Add Folder</span>
+    </button>
+    <button class="tool" id="btnClear" title="Remove all images from the list">
+      <svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12M10.5 10.5v6M13.5 10.5v6"/></svg>
+      <span>Clear All</span>
+    </button>
+    <span class="tool-gap"></span>
+    <button class="tool" id="btnOptions" title="Settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/></svg>
+      <span>Options</span>
+    </button>
+    <button class="tool" id="btnHelp" title="Help">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.2.9-1.2 1.8M12 16.6v.2"/></svg>
+      <span>Help</span>
+    </button>
+    <button class="tool" id="btnAbout" title="About">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.2"/></svg>
+      <span>About</span>
+    </button>
+  </nav>
+</header>
+
+<main class="stage" id="stage">
+  <section class="drop" id="dropZone">
+    <div class="drop-art">
+      <svg viewBox="0 0 120 96" aria-hidden="true">
+        <rect x="8" y="14" width="74" height="58" rx="7" class="a"/>
+        <circle cx="30" cy="34" r="6.5" class="b"/>
+        <path d="M12 66l22-22 16 15 12-11 18 18" class="c"/>
+        <rect x="58" y="40" width="54" height="44" rx="7" class="d"/>
+        <path d="M72 62h26M89 54l9 8-9 8" class="e"/>
+      </svg>
+    </div>
+    <h1>Drop photos or a whole folder here</h1>
+    <p>Large mobile photos become small, fast WebP files for your websites.</p>
+    <p class="drop-formats">JPG, PNG, HEIC (iPhone), BMP, GIF, TIFF, AVIF and WebP</p>
+  </section>
+
+  <section class="list-wrap" id="listWrap" hidden>
+    <div class="list-head">
+      <div class="c-thumb"></div>
+      <div class="c-name">Image</div>
+      <div class="c-size">Original</div>
+      <div class="c-size">New size</div>
+      <div class="c-saved">Saved</div>
+      <div class="c-status">Result</div>
+      <div class="c-x"></div>
+    </div>
+    <div class="list-body" id="listBody"></div>
+  </section>
+
+  <div class="dropveil" id="dropVeil"><div>Release to add these images</div></div>
+</main>
+
+<section class="summary" id="summary" hidden>
+  <div class="progress" id="progressWrap" hidden><div class="bar" id="progressBar"></div></div>
+  <div class="summary-row">
+    <div id="summaryText"></div>
+    <button class="link-btn" id="btnOpenOut" hidden>Open output folder</button>
+  </div>
+</section>
+
+<footer class="controls">
+  <div class="ctl-group">
+    <label class="ctl-label" for="modeSel">Convert</label>
+    <select id="modeSel"></select>
+  </div>
+
+  <div class="ctl-group">
+    <span class="ctl-label">Compression</span>
+    <div class="seg" role="group" aria-label="Compression mode">
+      <button id="segAuto" class="on">Auto (Intelligent)</button>
+      <button id="segManual">Manual</button>
+    </div>
+  </div>
+
+  <div class="ctl-group grow">
+    <div class="q-line">
+      <label class="ctl-label" for="qSlider" id="qLabel">Starting quality</label>
+      <output id="qOut">80%</output>
+    </div>
+    <input type="range" id="qSlider" min="30" max="100" step="1" value="80">
+    <div class="q-hint" id="qHint"></div>
+  </div>
+
+  <button class="convert" id="btnConvert">
+    <svg viewBox="0 0 24 24"><path d="M5 12a7 7 0 0 1 12-4.9L19 9M19 12a7 7 0 0 1-12 4.9L5 15M19 4v5h-5M5 20v-5h5"/></svg>
+    <span id="convertLabel">Optimize</span>
+  </button>
+</footer>
+
+<!-- Options -->
+<div class="modal" id="modalOptions" hidden>
+  <div class="dialog" role="dialog" aria-labelledby="optTitle">
+    <header><h2 id="optTitle">Options</h2><button class="x" data-close aria-label="Close">&times;</button></header>
+    <div class="dialog-body">
+      <div class="field">
+        <label for="optOut">Save optimized images to</label>
+        <div class="row">
+          <input type="text" id="optOut" readonly placeholder="Not set yet - you will be asked on the first conversion">
+          <button class="btn" id="optBrowse">Browse</button>
+          <button class="btn ghost" id="optOpen">Open</button>
+        </div>
+        <small>Set once. Change it here whenever you need. Your original images are never changed.</small>
+      </div>
+
+      <div class="field">
+        <label class="check"><input type="checkbox" id="optWidthOn"> Limit the width to</label>
+        <div class="row"><input type="number" id="optWidth" min="200" max="8000" step="50"> <span class="unit">pixels</span></div>
+        <small>Phone photos are often 4000 px wide or more. 1900 px is sharp on every phone and laptop.</small>
+      </div>
+
+      <div class="field">
+        <label class="check"><input type="checkbox" id="optTargetOn"> Aim for a file size under</label>
+        <div class="row"><input type="number" id="optTarget" min="20" max="5000" step="10"> <span class="unit">KB</span></div>
+        <small>Used by Auto (Intelligent) compression.</small>
+      </div>
+
+      <div class="field">
+        <label for="optMinQ">Lowest quality Auto may use: <b id="optMinQOut">60%</b></label>
+        <input type="range" id="optMinQ" min="40" max="90" step="1">
+        <small>Auto never goes below this. 60% looks clean on mobile screens.</small>
+      </div>
+
+      <div class="field">
+        <label class="check"><input type="checkbox" id="optStrip"> Remove hidden metadata (GPS location, camera details)</label>
+        <label class="check"><input type="checkbox" id="optClean"> Website-friendly file names (lowercase, no spaces)</label>
+        <label class="check"><input type="checkbox" id="optOpenDone"> Open the output folder when finished</label>
+      </div>
+    </div>
+    <footer><button class="btn primary" id="optSave">Save</button><button class="btn ghost" data-close>Cancel</button></footer>
+  </div>
+</div>
+
+<!-- Help -->
+<div class="modal" id="modalHelp" hidden>
+  <div class="dialog wide" role="dialog" aria-labelledby="helpTitle">
+    <header><h2 id="helpTitle">Help</h2><button class="x" data-close aria-label="Close">&times;</button></header>
+    <div class="help-search">
+      <input type="search" id="helpSearch" placeholder="Search help, for example: quality, 200 KB, iPhone, folder">
+      <span id="helpCount"></span>
+    </div>
+    <div class="dialog-body help-body" id="helpBody"></div>
+  </div>
+</div>
+
+<!-- About -->
+<div class="modal" id="modalAbout" hidden>
+  <div class="dialog about" role="dialog" aria-labelledby="aboutTitle">
+    <header><h2 id="aboutTitle">About</h2><button class="x" data-close aria-label="Close">&times;</button></header>
+    <div class="dialog-body about-body">
+      <div class="about-top">
+        <img id="aboutLogo" alt="Vidyasagar Robotics Academy" width="132" height="132">
+        <div>
+          <div class="about-title">VRA Intelligent Image Optimizer</div>
+          <div class="about-tag">Trusted name in education</div>
+          <div class="about-ver">Version <span id="aboutVer"></span></div>
+          <a href="#" id="aboutSite" class="site">https://vsa.edu.in/</a>
+        </div>
+      </div>
+      <p class="about-lead">Made for web designers and website owners who receive big mobile photos and need small, sharp, fast-loading WebP images, quickly and without losing quality.</p>
+      <h3>What it does</h3>
+      <ul class="feat">
+        <li><b>Any image to WebP by default.</b> JPG, PNG, HEIC (iPhone), BMP, GIF, TIFF, AVIF and WebP go in. Small WebP files come out.</li>
+        <li><b>Intelligent compression.</b> Finds the best quality for each photo by itself, and protects text, logos and sharp graphics.</li>
+        <li><b>Target file size.</b> Aims for under 200 KB (you can change it) without going below your lowest quality.</li>
+        <li><b>Quality slider.</b> Switch to Manual and set the compression yourself.</li>
+        <li><b>Smart resizing.</b> Limits the width to 1900 px (changeable) so phone photos load fast.</li>
+        <li><b>Correct rotation.</b> Phone photos never come out sideways.</li>
+        <li><b>Hidden metadata removal.</b> Removes GPS location and camera details for privacy and smaller files.</li>
+        <li><b>Whole folders.</b> Drop a folder and every image inside is converted, keeping the folder structure.</li>
+        <li><b>Website-friendly names.</b> Lowercase, no spaces, and never overwrites an existing file.</li>
+        <li><b>Other conversions.</b> WebP to JPG or PNG, and any image to JPG or PNG.</li>
+        <li><b>Safe and offline.</b> Your original images are never changed, and nothing is uploaded anywhere.</li>
+        <li><b>Before and after.</b> Shows the size of every image before and after, and the total saved.</li>
+        <li><b>Free for everyone.</b> Free to use, copy and share under the GPL.</li>
+      </ul>
+      <h3>Developed by</h3>
+      <p>Prof. Dattaraj Vidyasagar and Prof. Yash Vidyasagar<br>Vidyasagar Robotics Academy</p>
+      <h3>Free software</h3>
+      <p>Completely free. Released under the GNU General Public License (GPL v3), so you may copy and share it freely. Please keep the VRA name and copyright notice with it.</p>
+      <p class="copy">&copy; 2026 Vidyasagar Robotics Academy</p>
+    </div>
+  </div>
+</div>
+
+<!-- Message -->
+<div class="modal" id="modalMsg" hidden>
+  <div class="dialog small" role="alertdialog" aria-labelledby="msgTitle">
+    <header><h2 id="msgTitle"></h2></header>
+    <div class="dialog-body"><p id="msgText"></p></div>
+    <footer><button class="btn primary" id="msgOk">OK</button><button class="btn ghost" id="msgCancel" hidden>Cancel</button></footer>
+  </div>
+</div>
+
+<script src="helpdata.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
