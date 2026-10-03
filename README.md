@@ -25,7 +25,7 @@ Made by Vidyasagar Robotics Academy for web designers and website owners who rec
 ## Download and install
 
 1. Open the **Releases** page of this repository.
-2. Download `VRA Intelligent Image Optimizer Setup 1.0.0.exe` from the latest release.
+2. Download `VRA.Intelligent.Image.Optimizer.Setup.1.0.0.exe` from the latest release.
 3. Run it and follow the installer. Windows 10 and 11 (64-bit).
 
 > The installer is not code-signed yet, so Windows SmartScreen may show "Windows protected your PC". Click **More info**, then **Run anyway**.
